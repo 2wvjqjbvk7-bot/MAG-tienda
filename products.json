@@ -1,0 +1,34 @@
+[
+  {
+    "nombre": "Tote de lino crudo",
+    "categoria": "Bolsos",
+    "precio": "32",
+    "descripcion": "Bolso amplio de lino, forrado y con asas reforzadas a mano.",
+    "imagen": "",
+    "disponible": "SI"
+  },
+  {
+    "nombre": "Neceser a rayas",
+    "categoria": "Neceseres",
+    "precio": "14",
+    "descripcion": "Neceser de algodón con cremallera, ideal para el día a día.",
+    "imagen": "",
+    "disponible": "SI"
+  },
+  {
+    "nombre": "Funda de gafas en pana",
+    "categoria": "Fundas de gafas",
+    "precio": "9",
+    "descripcion": "Funda acolchada de pana, cierre de botón cosido a mano.",
+    "imagen": "",
+    "disponible": "SI"
+  },
+  {
+    "nombre": "Funda iPad acolchada",
+    "categoria": "Fundas iPad/portátil",
+    "precio": "18",
+    "descripcion": "Funda acolchada con cierre de velcro, a medida bajo pedido.",
+    "imagen": "",
+    "disponible": "SI"
+  }
+]

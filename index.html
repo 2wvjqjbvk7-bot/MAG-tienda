@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MAJO — hecho a mano</title>
+<style>
+  /* ====================================================================
+     CONFIGURACIÓN — edita estos valores directamente en este archivo
+     con el Bloc de notas / TextEdit. No hace falta saber programar,
+     solo cambiar lo que hay entre comillas.
+     ==================================================================== */
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script>
+/* ====================================================================
+   1) CONFIGURACIÓN — cambia estos valores
+   ==================================================================== */
+const WHATSAPP_NUMBER = "34600000000";   // solo números, con prefijo de país
+const INSTAGRAM_USER = "majo.handmade"; // sin la @
+const EMAIL = "hola@majo-handmade.com";
+const TAGLINE = "hecho a mano, pieza a pieza";
+const ABOUT_1 = "MAJO nace de una máquina de coser que lleva años sin parar de sonar en casa. Cada bolso, neceser o funda se corta, se cose y se remata a mano, eligiendo telas distintas para que ninguna pieza sea exactamente igual a otra.";
+const ABOUT_2 = "Sin grandes tiradas ni producción en serie: cada encargo se hace cuando se pide, con el tiempo que necesita.";
+
+/* Los productos se leen del archivo products.json que está junto a este
+   archivo. Para añadir, cambiar o borrar una pieza, se edita ese archivo
+   directamente desde la web de GitHub — no hace falta tocar este archivo. */
+
+const DEMO_PRODUCTS = [
+  { nombre: "Tote de lino crudo", categoria: "Bolsos", precio: "32", descripcion: "Bolso amplio de lino, forrado y con asas reforzadas a mano.", imagen: "", disponible: "SI" },
+];
+
+const SWATCHES = ["#C9BCA8", "#A13D2A", "#7C8863", "#3F6259", "#8C6E4E", "#B79B7A"];
+
+/* ====================================================================
+   2) ESTILOS
+   ==================================================================== */
+const css = `
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap');
+  :root {
+    --color-bg: #EDE6D8; --color-bg-alt: #E3DACB; --color-ink: #2B2420; --color-ink-soft: #5B5148;
+    --color-accent-clay: #A13D2A; --color-accent-teal: #3F6259; --color-accent-sage: #7C8863;
+    --color-line: #C9BCA8; --color-card: #F7F3EA;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--color-bg); color: var(--color-ink); font-family: 'Work Sans', sans-serif; line-height: 1.5; }
+  h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
+  .mono { font-family: 'Space Mono', monospace; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  .stitch { width: 100%; height: 8px; display: block; }
+
+  header { position: sticky; top: 0; z-index: 20; background: var(--color-bg); border-bottom: 1px solid var(--color-line); }
+  header .inner { display: flex; align-items: center; justify-content: space-between; padding: 18px 24px; }
+  .brand { display: flex; align-items: baseline; gap: 10px; }
+  .brand h1 { font-size: 26px; letter-spacing: 0.02em; }
+  .brand span { font-size: 12px; color: var(--color-ink-soft); font-family: 'Space Mono', monospace; }
+  nav { display: flex; gap: 26px; }
+  nav a { font-size: 14px; color: var(--color-ink); text-decoration: none; cursor: pointer; border-bottom: 1px solid transparent; }
+  nav a:hover { border-color: var(--color-accent-clay); }
+  @media (max-width: 640px) { nav { display: none; } }
+
+  .hero { padding: 64px 0 40px; }
+  .hero .inner { display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; align-items: center; }
+  @media (max-width: 800px) { .hero .inner { grid-template-columns: 1fr; } .spool-art { max-width: 200px; margin: 0 auto; } }
+  .eyebrow { font-family: 'Space Mono', monospace; font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--color-accent-teal); margin-bottom: 14px; display: block; }
+  .hero h2 { font-size: clamp(32px, 5vw, 52px); line-height: 1.08; margin-bottom: 20px; }
+  .hero p.lead { font-size: 17px; color: var(--color-ink-soft); max-width: 480px; margin-bottom: 28px; }
+  .spool-art { width: 100%; max-width: 260px; }
+
+  .btn { font-family: 'Work Sans', sans-serif; font-weight: 600; font-size: 14px; padding: 12px 22px; border-radius: 3px; cursor: pointer; border: 1.5px solid var(--color-ink); background: var(--color-ink); color: var(--color-bg); display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+  .btn-ghost { background: transparent; color: var(--color-ink); border-color: var(--color-ink); }
+  .btn-clay { background: var(--color-accent-clay); border-color: var(--color-accent-clay); color: var(--color-card); }
+  .btn-sm { padding: 7px 14px; font-size: 12px; }
+
+  .cat-bar { display: flex; gap: 10px; overflow-x: auto; padding: 4px 0 8px; }
+  .chip { font-family: 'Space Mono', monospace; font-size: 12px; white-space: nowrap; padding: 8px 16px; border: 1.5px dashed var(--color-line); border-radius: 20px; background: transparent; color: var(--color-ink-soft); cursor: pointer; }
+  .chip.active { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-bg); border-style: solid; }
+
+  .catalog-section { padding: 30px 0 70px; }
+  .catalog-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 22px; flex-wrap: wrap; gap: 14px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 22px; }
+  .card { background: var(--color-card); border: 1px solid var(--color-line); border-radius: 4px; overflow: hidden; position: relative; display: flex; flex-direction: column; }
+  .card .hang-tag { position: absolute; top: 10px; left: 10px; width: 24px; height: 24px; z-index: 2; }
+  .card .thumb { height: 190px; display: flex; align-items: center; justify-content: center; background-size: cover; background-position: center; }
+  .card .thumb .swatch-label { font-family: 'Space Mono', monospace; font-size: 11px; color: rgba(43,36,32,0.55); }
+  .card .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .card .cat-label { font-family: 'Space Mono', monospace; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-accent-teal); }
+  .card h3 { font-size: 19px; }
+  .card .desc { font-size: 13.5px; color: var(--color-ink-soft); flex: 1; }
+  .card .price-row { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+  .card .price { font-family: 'Space Mono', monospace; font-size: 16px; font-weight: 700; }
+  .unavailable-badge { font-size: 11px; color: var(--color-accent-clay); font-family: 'Space Mono', monospace; }
+
+  .about { background: var(--color-bg-alt); padding: 64px 0; border-top: 1px solid var(--color-line); border-bottom: 1px solid var(--color-line); }
+  .about .inner { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; }
+  @media (max-width: 800px) { .about .inner { grid-template-columns: 1fr; } }
+  .about h2 { font-size: 28px; margin-bottom: 16px; }
+  .about p { color: var(--color-ink-soft); margin-bottom: 14px; font-size: 15.5px; }
+
+  footer { background: var(--color-ink); color: var(--color-bg); padding: 50px 0 26px; }
+  footer .inner { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 32px; }
+  @media (max-width: 700px) { footer .inner { grid-template-columns: 1fr; } }
+  footer h4 { font-family: 'Space Mono', monospace; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 14px; color: var(--color-accent-sage); }
+  footer a { color: var(--color-bg); text-decoration: none; opacity: 0.85; }
+  footer a:hover { opacity: 1; text-decoration: underline; }
+  footer .foot-bottom { margin-top: 36px; padding-top: 18px; border-top: 1px solid rgba(237,230,216,0.2); font-size: 12px; opacity: 0.7; }
+  .empty-msg { margin-top: 24px; color: var(--color-ink-soft); }
+`;
+const styleTag = document.createElement("style");
+styleTag.textContent = css;
+document.head.appendChild(styleTag);
+
+/* ====================================================================
+   3) HTML base
+   ==================================================================== */
+document.getElementById("root").innerHTML = `
+  <header>
+    <div class="inner">
+      <div class="brand"><h1>MAJO</h1><span>${TAGLINE}</span></div>
+      <nav>
+        <a href="#catalogo">Piezas</a>
+        <a href="#sobre">Sobre mí</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+    </div>
+    <svg class="stitch" viewBox="0 0 400 8" preserveAspectRatio="none"><line x1="0" y1="4" x2="400" y2="4" stroke="#C9BCA8" stroke-width="2" stroke-dasharray="10 8" stroke-linecap="round"/></svg>
+  </header>
+
+  <section class="hero">
+    <div class="wrap inner">
+      <div>
+        <span class="eyebrow">MAJO — taller de costura hecho a mano</span>
+        <h2>Lo que antes se guardaba en un armario, ahora tiene sitio en el tuyo.</h2>
+        <p class="lead">Bolsos, neceseres y fundas cosidos a mano, uno a uno, con telas distintas en cada temporada. Cada pieza se hace cuando se pide.</p>
+        <a class="btn btn-clay" href="#catalogo">Ver piezas ↓</a>
+      </div>
+      <svg class="spool-art" viewBox="0 0 240 240">
+        <ellipse cx="120" cy="55" rx="46" ry="14" fill="none" stroke="#2B2420" stroke-width="2"/>
+        <path d="M74 55 L82 185" fill="none" stroke="#2B2420" stroke-width="2"/>
+        <path d="M166 55 L158 185" fill="none" stroke="#2B2420" stroke-width="2"/>
+        <ellipse cx="120" cy="185" rx="42" ry="13" fill="none" stroke="#2B2420" stroke-width="2"/>
+        <ellipse cx="120" cy="118" rx="44" ry="58" fill="#A13D2A" opacity="0.85"/>
+        <path d="M80 70 C150 90, 90 130, 160 150 C170 155, 165 170, 150 168" fill="none" stroke="#F7F3EA" stroke-width="2" stroke-dasharray="6 5" opacity="0.6"/>
+      </svg>
+    </div>
+  </section>
+
+  <section class="catalog-section" id="catalogo">
+    <div class="wrap">
+      <div class="catalog-head"><h2 style="font-size:26px;">Piezas disponibles</h2></div>
+      <div class="cat-bar" id="cat-bar"></div>
+      <div class="grid" id="grid" style="margin-top:22px;"></div>
+      <p class="empty-msg" id="empty-msg" style="display:none;">Todavía no hay piezas en esta categoría.</p>
+    </div>
+  </section>
+
+  <section class="about" id="sobre">
+    <div class="wrap inner">
+      <div>
+        <h2>Sobre MAJO</h2>
+        <p>${ABOUT_1}</p>
+        <p>${ABOUT_2}</p>
+      </div>
+      <svg class="stitch" viewBox="0 0 400 8" preserveAspectRatio="none"><line x1="0" y1="4" x2="400" y2="4" stroke="#5B5148" stroke-width="2" stroke-dasharray="10 8" stroke-linecap="round"/></svg>
+    </div>
+  </section>
+
+  <footer id="contacto">
+    <div class="wrap inner">
+      <div>
+        <h4>MAJO</h4>
+        <p style="opacity:0.85; font-size:14px; max-width:260px;">Piezas hechas a mano, a tu ritmo y con la tela que más te guste.</p>
+      </div>
+      <div>
+        <h4>Piezas</h4>
+        <div id="footer-cats"></div>
+      </div>
+      <div>
+        <h4>Contacto</h4>
+        <div style="margin-bottom:6px;"><a href="https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Hola! Tengo una consulta sobre MAJO")}" target="_blank" rel="noreferrer">WhatsApp</a></div>
+        <div style="margin-bottom:6px;"><a href="https://instagram.com/${INSTAGRAM_USER}" target="_blank" rel="noreferrer">@${INSTAGRAM_USER}</a></div>
+        <div style="margin-bottom:6px;"><a href="mailto:${EMAIL}">${EMAIL}</a></div>
+      </div>
+    </div>
+    <div class="wrap foot-bottom">hecho a mano · hecho con cariño</div>
+  </footer>
+`;
+
+/* ====================================================================
+   4) Cargar catálogo desde Google Sheets (o demo si no está configurado)
+   ==================================================================== */
+function waLink(text) {
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+}
+
+function render(products) {
+  const categories = [...new Set(products.map((p) => p.categoria).filter(Boolean))];
+  const catBar = document.getElementById("cat-bar");
+  const footerCats = document.getElementById("footer-cats");
+  let activeCategory = "Todas";
+
+  function renderChips() {
+    catBar.innerHTML = `<button class="chip ${activeCategory === "Todas" ? "active" : ""}" data-cat="Todas">Todas</button>` +
+      categories.map((c) => `<button class="chip ${activeCategory === c ? "active" : ""}" data-cat="${c}">${c}</button>`).join("");
+    catBar.querySelectorAll(".chip").forEach((btn) => btn.addEventListener("click", () => {
+      activeCategory = btn.dataset.cat;
+      renderChips();
+      renderGrid();
+    }));
+  }
+
+  function renderGrid() {
+    const grid = document.getElementById("grid");
+    const emptyMsg = document.getElementById("empty-msg");
+    const visible = activeCategory === "Todas" ? products : products.filter((p) => p.categoria === activeCategory);
+    emptyMsg.style.display = visible.length === 0 ? "block" : "none";
+    grid.innerHTML = visible.map((p, i) => {
+      const available = (p.disponible || "SI").toUpperCase() !== "NO";
+      const bg = p.imagen ? `background-image:url('${p.imagen}')` : `background:${SWATCHES[i % SWATCHES.length]}`;
+      return `
+        <div class="card">
+          <svg class="hang-tag" viewBox="0 0 36 36"><path d="M4 4 L20 4 L32 16 L20 32 L4 32 Z" fill="#F7F3EA" stroke="#2B2420" stroke-width="1.5"/><circle cx="11" cy="12" r="2.2" fill="none" stroke="#2B2420" stroke-width="1.5"/></svg>
+          <div class="thumb" style="${bg}">${p.imagen ? "" : `<span class="swatch-label mono">foto pendiente</span>`}</div>
+          <div class="body">
+            <span class="cat-label">${p.categoria || ""}</span>
+            <h3>${p.nombre || ""}</h3>
+            <p class="desc">${p.descripcion || ""}</p>
+            <div class="price-row">
+              <span class="price">${p.precio || "0"} €</span>
+              ${available ? `<a class="btn btn-ghost btn-sm" target="_blank" rel="noreferrer" href="${waLink("Hola! Me interesa: " + p.nombre + " (" + p.precio + "€)")}">Preguntar</a>` : `<span class="unavailable-badge">no disponible</span>`}
+            </div>
+          </div>
+        </div>`;
+    }).join("");
+  }
+
+  footerCats.innerHTML = categories.slice(0, 4).map((c) => `<div style="margin-bottom:6px;"><a href="#catalogo">${c}</a></div>`).join("");
+
+  renderChips();
+  renderGrid();
+}
+
+async function init() {
+  try {
+    const res = await fetch("./products.json");
+    const products = await res.json();
+    render(Array.isArray(products) && products.length ? products : DEMO_PRODUCTS);
+  } catch (e) {
+    console.error("No se pudo cargar products.json:", e);
+    render(DEMO_PRODUCTS);
+  }
+}
+
+init();
+</script>
+</body>
+</html>
