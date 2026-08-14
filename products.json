@@ -30,5 +30,45 @@
     "descripcion": "Funda acolchada con cierre de velcro, a medida bajo pedido.",
     "imagen": "",
     "disponible": "SI"
-  }
+  },
+  {
+  "nombre": "Manta de muselina",
+  "categoria": "Bebé",
+  "precio": "22",
+  "descripcion": "Manta suave de muselina de algodón, cosida a mano.",
+  "imagen": "",
+  "disponible": "SI"
+  },
+  {
+  "nombre": "Nido para bebé",
+  "categoria": "Bebé",
+  "precio": "38",
+  "descripcion": "Nido acolchado y transpirable para los primeros meses, cosido a mano con relleno suave y tela hipoalergénica.",
+  "imagen": "",
+  "disponible": "SI"
+},
+{
+  "nombre": "Capa de baño",
+  "categoria": "Bebé",
+  "precio": "18",
+  "descripcion": "Capa de baño con capucha, en algodón absorbente, perfecta para envolver al bebé recién salido de la bañera.",
+  "imagen": "",
+  "disponible": "SI"
+},
+{
+  "nombre": "Arrullo de muselina",
+  "categoria": "Bebé",
+  "precio": "20",
+  "descripcion": "Arrullo de muselina suave, ligero y transpirable, ideal para envolver al bebé o usar de manta ligera.",
+  "imagen": "",
+  "disponible": "SI"
+},
+{
+  "nombre": "Cambiador portátil",
+  "categoria": "Bebé",
+  "precio": "20",
+  "descripcion": "Cambiador portátil acolchado, fácil de enrollar y llevar, con tela lavable a máquina.",
+  "imagen": "",
+  "disponible": "SI"
+}
 ]
