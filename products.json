@@ -1,6 +1,6 @@
 [
   {
-    "nombre": "Tote de playero",
+    "nombre": "Tote playero",
     "categoria": "Bolsos",
     "precio": "35",
     "descripcion": "Bolso amplio ideal para ir a la playa, forrado y con asas reforzadas a mano.",
@@ -8,7 +8,7 @@
     "disponible": "SI"
   },
   {
-    "nombre": "Neceser a rayas",
+    "nombre": "Neceser de rayas",
     "categoria": "Neceseres",
     "precio": "14",
     "descripcion": "Neceser de algodón con cremallera, ideal para el día a día.",
