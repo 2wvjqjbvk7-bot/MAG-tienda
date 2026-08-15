@@ -15,6 +15,20 @@
 <body>
 <div id="root"></div>
 
+<button class="cart-fab" id="cart-fab">🧺 Cesta <span class="cart-badge" id="cart-count">0</span></button>
+<div class="cart-overlay" id="cart-overlay"></div>
+<div class="cart-panel" id="cart-panel">
+  <div class="cart-header">
+    <h3 style="font-size:18px;">Tu cesta</h3>
+    <button class="cart-close" id="cart-close">×</button>
+  </div>
+  <div class="cart-items" id="cart-items"></div>
+  <div class="cart-footer">
+    <div class="cart-total-row"><span>Total</span><span class="amount" id="cart-total">0 €</span></div>
+    <a class="btn btn-clay" style="width:100%; justify-content:center;" id="cart-checkout" target="_blank" rel="noreferrer">Pedir por WhatsApp</a>
+  </div>
+</div>
+
 <script>
 /* ====================================================================
    1) CONFIGURACIÓN — cambia estos valores
@@ -109,6 +123,29 @@ const css = `
   footer a:hover { opacity: 1; text-decoration: underline; }
   footer .foot-bottom { margin-top: 36px; padding-top: 18px; border-top: 1px solid rgba(237,230,216,0.2); font-size: 12px; opacity: 0.7; }
   .empty-msg { margin-top: 24px; color: var(--color-ink-soft); }
+
+  .cart-fab { position: fixed; bottom: 20px; right: 20px; z-index: 30; background: var(--color-ink); color: var(--color-bg); border-radius: 50px; padding: 14px 20px; display: flex; align-items: center; gap: 8px; cursor: pointer; border: none; box-shadow: 0 4px 14px rgba(0,0,0,0.22); font-family: 'Work Sans', sans-serif; font-weight: 600; font-size: 14px; }
+  .cart-badge { background: var(--color-accent-clay); color: #fff; border-radius: 50%; min-width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-family: 'Space Mono', monospace; padding: 0 4px; }
+  .cart-overlay { position: fixed; inset: 0; background: rgba(38,34,32,0.4); z-index: 40; display: none; }
+  .cart-overlay.open { display: block; }
+  .cart-panel { position: fixed; top: 0; right: 0; height: 100%; width: 100%; max-width: 380px; background: var(--color-bg); z-index: 41; transform: translateX(100%); transition: transform .25s ease; display: flex; flex-direction: column; box-shadow: -8px 0 24px rgba(0,0,0,0.12); }
+  .cart-panel.open { transform: translateX(0); }
+  .cart-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 22px; border-bottom: 1px solid var(--color-line); }
+  .cart-close { background: none; border: none; font-size: 24px; line-height: 1; cursor: pointer; color: var(--color-ink); }
+  .cart-items { flex: 1; overflow-y: auto; padding: 6px 22px; }
+  .cart-item { display: flex; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--color-line); }
+  .cart-item-thumb { width: 56px; height: 56px; border-radius: 4px; background-size: cover; background-position: center; flex-shrink: 0; }
+  .cart-item-body { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+  .cart-item-name { font-size: 14px; font-weight: 600; }
+  .cart-item-price { font-family: 'Space Mono', monospace; font-size: 12.5px; color: var(--color-ink-soft); }
+  .qty-row { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+  .qty-btn { width: 22px; height: 22px; border: 1px solid var(--color-line); background: var(--color-bg); cursor: pointer; border-radius: 3px; font-size: 14px; line-height: 1; }
+  .cart-remove { font-size: 11px; color: var(--color-accent-clay); background: none; border: none; cursor: pointer; text-decoration: underline; padding: 0; margin-left: auto; }
+  .cart-empty { color: var(--color-ink-soft); font-size: 14px; padding: 40px 0; text-align: center; }
+  .cart-footer { padding: 18px 22px 24px; border-top: 1px solid var(--color-line); }
+  .cart-total-row { display: flex; justify-content: space-between; font-size: 15px; margin-bottom: 14px; }
+  .cart-total-row .amount { font-family: 'Space Mono', monospace; font-weight: 700; }
+  .cart-checkout-disabled { pointer-events: none; opacity: 0.45; }
 `;
 const styleTag = document.createElement("style");
 styleTag.textContent = css;
@@ -190,6 +227,120 @@ function waLink(text) {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
 }
 
+/* ====================================================================
+   CESTA — se guarda en el navegador del cliente (localStorage) para
+   que no se pierda si recarga la página, hasta que haga el pedido.
+   ==================================================================== */
+let cart = [];
+
+function loadCart() {
+  try {
+    const saved = localStorage.getItem("mag_cart");
+    cart = saved ? JSON.parse(saved) : [];
+  } catch (e) {
+    cart = [];
+  }
+}
+
+function saveCart() {
+  try { localStorage.setItem("mag_cart", JSON.stringify(cart)); } catch (e) {}
+}
+
+function addToCart(p) {
+  const existing = cart.find((item) => item.nombre === p.nombre);
+  if (existing) {
+    existing.cantidad += 1;
+  } else {
+    cart.push({ nombre: p.nombre, precio: p.precio, imagen: p.imagen || "", cantidad: 1 });
+  }
+  saveCart();
+  renderCart();
+  openCart();
+}
+
+function removeFromCart(nombre) {
+  cart = cart.filter((item) => item.nombre !== nombre);
+  saveCart();
+  renderCart();
+}
+
+function changeQty(nombre, delta) {
+  const item = cart.find((i) => i.nombre === nombre);
+  if (!item) return;
+  item.cantidad += delta;
+  if (item.cantidad <= 0) { removeFromCart(nombre); return; }
+  saveCart();
+  renderCart();
+}
+
+function renderCart() {
+  const itemsEl = document.getElementById("cart-items");
+  const countEl = document.getElementById("cart-count");
+  const totalEl = document.getElementById("cart-total");
+  const checkoutBtn = document.getElementById("cart-checkout");
+
+  countEl.textContent = cart.reduce((sum, i) => sum + i.cantidad, 0);
+
+  if (cart.length === 0) {
+    itemsEl.innerHTML = `<p class="cart-empty">Tu cesta está vacía todavía.<br>Añade alguna pieza del catálogo.</p>`;
+  } else {
+    itemsEl.innerHTML = cart.map((item) => {
+      const bg = item.imagen ? `background-image:url('${item.imagen}')` : `background:${SWATCHES[0]}`;
+      return `
+        <div class="cart-item">
+          <div class="cart-item-thumb" style="${bg}"></div>
+          <div class="cart-item-body">
+            <span class="cart-item-name">${item.nombre}</span>
+            <span class="cart-item-price">${item.precio} € × ${item.cantidad}</span>
+            <div class="qty-row">
+              <button class="qty-btn" data-action="minus" data-name="${item.nombre}">−</button>
+              <span class="mono">${item.cantidad}</span>
+              <button class="qty-btn" data-action="plus" data-name="${item.nombre}">+</button>
+              <button class="cart-remove" data-action="remove" data-name="${item.nombre}">quitar</button>
+            </div>
+          </div>
+        </div>`;
+    }).join("");
+    itemsEl.querySelectorAll("[data-action]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const name = btn.dataset.name;
+        if (btn.dataset.action === "plus") changeQty(name, 1);
+        else if (btn.dataset.action === "minus") changeQty(name, -1);
+        else if (btn.dataset.action === "remove") removeFromCart(name);
+      });
+    });
+  }
+
+  const total = cart.reduce((sum, i) => sum + (parseFloat(i.precio) || 0) * i.cantidad, 0);
+  totalEl.textContent = total.toFixed(2) + " €";
+
+  if (cart.length === 0) {
+    checkoutBtn.classList.add("cart-checkout-disabled");
+    checkoutBtn.href = "#";
+  } else {
+    checkoutBtn.classList.remove("cart-checkout-disabled");
+    const lines = cart.map((i) => `- ${i.nombre} ×${i.cantidad} (${i.precio}€)`).join("\n");
+    const msg = `Hola! Quiero hacer este pedido:\n${lines}\n\nTotal: ${total.toFixed(2)}€`;
+    checkoutBtn.href = waLink(msg);
+  }
+}
+
+function openCart() {
+  document.getElementById("cart-panel").classList.add("open");
+  document.getElementById("cart-overlay").classList.add("open");
+}
+function closeCart() {
+  document.getElementById("cart-panel").classList.remove("open");
+  document.getElementById("cart-overlay").classList.remove("open");
+}
+
+document.getElementById("cart-fab").addEventListener("click", openCart);
+document.getElementById("cart-close").addEventListener("click", closeCart);
+document.getElementById("cart-overlay").addEventListener("click", closeCart);
+
+loadCart();
+renderCart();
+
 function render(products) {
   const categories = [...new Set(products.map((p) => p.categoria).filter(Boolean))];
   const catBar = document.getElementById("cat-bar");
@@ -224,11 +375,16 @@ function render(products) {
             <p class="desc">${p.descripcion || ""}</p>
             <div class="price-row">
               <span class="price">${p.precio || "0"} €</span>
-              ${available ? `<a class="btn btn-ghost btn-sm" target="_blank" rel="noreferrer" href="${waLink("Hola! Me interesa: " + p.nombre + " (" + p.precio + "€)")}">Preguntar</a>` : `<span class="unavailable-badge">no disponible</span>`}
+              ${available ? `<button class="btn btn-ghost btn-sm add-cart-btn" data-idx="${i}">Añadir a la cesta</button>` : `<span class="unavailable-badge">no disponible</span>`}
             </div>
           </div>
         </div>`;
     }).join("");
+    grid.querySelectorAll(".add-cart-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        addToCart(visible[parseInt(btn.dataset.idx, 10)]);
+      });
+    });
   }
 
   footerCats.innerHTML = categories.slice(0, 4).map((c) => `<div style="margin-bottom:6px;"><a href="#catalogo">${c}</a></div>`).join("");
