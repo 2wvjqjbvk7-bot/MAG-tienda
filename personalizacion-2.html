@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Personalización 100% — MAG</title>
+<link rel="stylesheet" href="mag-common.css" />
+</head>
+<body>
+<div id="mag-chrome"></div>
+
+<section class="page-hero">
+  <div class="wrap">
+    <span class="eyebrow">Hecho a medida, contigo</span>
+    <h2>Personalización 100%</h2>
+  </div>
+</section>
+
+<section class="personalizacion-text">
+  <div class="wrap">
+    <p>Creemos que son los pequeños detalles los que hacen que cada pieza sea realmente especial. Por eso, damos mucha importancia a crear productos con sentimiento, pensados para cada persona y para cada ocasión.</p>
+    <p>En MAG puedes realizar pedidos totalmente personalizados y hacer que tu pieza sea única. Puedes elegir diferentes detalles como la tela, los colores, estampados, iniciales, nombres, letras, frases y otros elementos que quieras incorporar.</p>
+    <p>Para realizar una personalización, solo tienes que ponerte en contacto con nosotros y contarnos con el mayor detalle posible qué tienes en mente. Estudiaremos tu propuesta y te informaremos de si es posible llevarla a cabo, buscando siempre la mejor opción para conseguir un resultado que se adapte a lo que imaginas.</p>
+    <p>Nos encanta transformar ideas en piezas hechas especialmente para ti, cuidando cada detalle del proceso para que el resultado tenga ese toque personal y especial que buscas.</p>
+  </div>
+</section>
+
+<section class="hablamos" id="contacto-personalizacion">
+  <div class="wrap inner">
+    <div>
+      <h2>¿Hablamos?</h2>
+      <p class="lead">Cuéntanos qué tienes en mente para tu pieza personalizada y nos ponemos manos a la obra.</p>
+      <p class="invite">¡Escríbenos para recibir más información!</p>
+      <div class="hablamos-contact" id="personalizacion-contact-links"></div>
+    </div>
+    <form class="hablamos-form" id="personalizacion-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="p-nombre">Nombre *</label>
+          <input type="text" id="p-nombre" placeholder="Ingresa tu nombre" required />
+        </div>
+        <div class="form-group">
+          <label for="p-email">Email *</label>
+          <input type="email" id="p-email" placeholder="Ingresa tu email" required />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="p-asunto">Asunto</label>
+          <input type="text" id="p-asunto" placeholder="Escribe el asunto" />
+        </div>
+        <div class="form-group">
+          <label for="p-telefono">Teléfono</label>
+          <input type="tel" id="p-telefono" placeholder="Introduce tu número de teléfono" />
+        </div>
+      </div>
+
+      <div class="option-group">
+        <label>¿Qué te gustaría personalizar?</label>
+        <div class="option-choices">
+          <label class="option-choice">
+            <input type="checkbox" name="opcion" value="Letras" />
+            <span>Letras</span>
+          </label>
+          <label class="option-choice">
+            <input type="checkbox" name="opcion" value="Palabras" />
+            <span>Palabras</span>
+          </label>
+          <label class="option-choice">
+            <input type="checkbox" name="opcion" value="Frase" />
+            <span>Frase</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="p-mensaje">Mensaje</label>
+        <textarea id="p-mensaje" placeholder="Cuéntanos con el mayor detalle posible qué tienes en mente..."></textarea>
+      </div>
+      <button type="submit" class="btn" style="width:100%; justify-content:center;">Enviar</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap inner">
+    <div>
+      <h4>MAG</h4>
+      <p style="opacity:0.85; font-size:14px; max-width:260px;">Piezas hechas a mano, a tu ritmo y con la tela que más te guste.</p>
+    </div>
+    <div>
+      <h4>Piezas</h4>
+      <div style="margin-bottom:6px;"><a href="index.html#catalogo">Ver catálogo</a></div>
+    </div>
+    <div>
+      <h4>Contacto</h4>
+      <div id="personalizacion-footer-contact"></div>
+    </div>
+  </div>
+  <div class="wrap foot-bottom">hecho a mano · hecho con cariño</div>
+</footer>
+
+<script src="mag-common.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("personalizacion-contact-links").innerHTML = `
+    <a href="mailto:${window.MAG_CONFIG.EMAIL}">${window.MAG_CONFIG.EMAIL}</a>
+    <a href="https://wa.me/${window.MAG_CONFIG.WHATSAPP_NUMBER}" target="_blank" rel="noreferrer">WhatsApp +34 636 95 25 95</a>
+    <a href="https://instagram.com/${window.MAG_CONFIG.INSTAGRAM_USER}" target="_blank" rel="noreferrer">@${window.MAG_CONFIG.INSTAGRAM_USER}</a>
+  `;
+  document.getElementById("personalizacion-footer-contact").innerHTML = `
+    <div style="margin-bottom:6px;"><a href="https://wa.me/${window.MAG_CONFIG.WHATSAPP_NUMBER}" target="_blank" rel="noreferrer">WhatsApp</a></div>
+    <div style="margin-bottom:6px;"><a href="https://instagram.com/${window.MAG_CONFIG.INSTAGRAM_USER}" target="_blank" rel="noreferrer">@${window.MAG_CONFIG.INSTAGRAM_USER}</a></div>
+    <div style="margin-bottom:6px;"><a href="mailto:${window.MAG_CONFIG.EMAIL}">${window.MAG_CONFIG.EMAIL}</a></div>
+  `;
+});
+
+const personalizacionForm = document.getElementById("personalizacion-form");
+personalizacionForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const nombre = document.getElementById("p-nombre").value.trim();
+  const email = document.getElementById("p-email").value.trim();
+  const asunto = document.getElementById("p-asunto").value.trim();
+  const telefono = document.getElementById("p-telefono").value.trim();
+  const mensaje = document.getElementById("p-mensaje").value.trim();
+  const opciones = Array.from(document.querySelectorAll('input[name="opcion"]:checked')).map((el) => el.value);
+
+  if (!nombre || !email) {
+    alert("Por favor, rellena al menos tu nombre y tu email.");
+    return;
+  }
+
+  let text = `Hola! Soy ${nombre} y quiero una pieza personalizada.\n`;
+  if (asunto) text += `Asunto: ${asunto}\n`;
+  text += `Email: ${email}\n`;
+  if (telefono) text += `Teléfono: ${telefono}\n`;
+  if (opciones.length) text += `Quiero personalizar: ${opciones.join(", ")}\n`;
+  if (mensaje) text += `\n${mensaje}`;
+
+  window.open(waLink(text), "_blank", "noreferrer");
+  personalizacionForm.reset();
+});
+</script>
+</body>
+</html>
