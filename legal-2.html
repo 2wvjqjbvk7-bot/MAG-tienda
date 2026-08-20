@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MAG — Información legal</title>
+<link rel="stylesheet" href="mag-common.css" />
+</head>
+<body>
+<div id="mag-chrome"></div>
+
+<section class="legal-page">
+  <div class="wrap">
+    <h2>Información legal</h2>
+    <div class="legal-tabs" id="legal-tabs"></div>
+    <div class="legal-content" id="legal-content"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap inner">
+    <div>
+      <h4>MAG</h4>
+      <p style="opacity:0.85; font-size:14px; max-width:260px;">Piezas hechas a mano, a tu ritmo y con la tela que más te guste.</p>
+    </div>
+    <div>
+      <h4>Piezas</h4>
+      <div style="margin-bottom:6px;"><a href="index.html#catalogo">Ver catálogo</a></div>
+    </div>
+    <div>
+      <h4>Contacto</h4>
+      <div id="legal-footer-contact"></div>
+    </div>
+  </div>
+  <div class="wrap foot-bottom">hecho a mano · hecho con cariño</div>
+</footer>
+
+<script src="mag-common.js"></script>
+<script>
+const LEGAL_TEXTS = {
+  devoluciones: `
+    <h4>Política de cambio</h4>
+    <p><strong>Devoluciones / cambios</strong></p>
+    <p>Dispones de un plazo de 15 días desde la recepción del pedido para solicitar una devolución de aquellos productos que no sean personalizados.</p>
+    <p>En el caso de los productos personalizados (bordados), no se admitirán devoluciones, excepto cuando el artículo presente algún defecto de fabricación.</p>
+    <p>Para poder aceptar la devolución, el producto deberá encontrarse en las mismas condiciones en las que fue recibido: sin haber sido utilizado, con sus etiquetas y dentro de su embalaje original. También será necesario presentar el recibo o justificante de compra.</p>
+    <p>Si deseas solicitar una devolución o tienes alguna duda relacionada con ella, puedes escribirnos a: <a href="mailto:${window.MAG_CONFIG.EMAIL}">${window.MAG_CONFIG.EMAIL}</a></p>
+    <p><strong>Daños y problemas</strong></p>
+    <p>Te recomendamos comprobar el pedido en cuanto lo recibas. Si el producto presenta algún defecto, ha llegado dañado o has recibido un artículo diferente al solicitado, ponte en contacto con nosotros lo antes posible para que podamos revisar el caso y ofrecerte una solución.</p>
+    <p><strong>Reembolsos</strong></p>
+    <p>Una vez que recibamos tu devolución, procederemos a revisarla y te informaremos de si el reembolso ha sido aprobado o rechazado. En caso de aprobación, el importe se devolverá automáticamente al método de pago utilizado originalmente en un plazo máximo de 10 días hábiles.</p>
+    <p>Ten en cuenta que, dependiendo de tu banco o de la entidad emisora de la tarjeta, el reembolso puede tardar unos días adicionales en aparecer reflejado en tu cuenta.</p>
+    <p>Si han pasado más de 15 días hábiles desde la aprobación de tu devolución y todavía no has recibido el reembolso, puedes ponerte en contacto con nosotros en <a href="mailto:${window.MAG_CONFIG.EMAIL}">${window.MAG_CONFIG.EMAIL}</a>.</p>
+  `,
+  envios: `
+    <h4>Política de envío</h4>
+    <p><strong>Política de Envíos y Entregas</strong></p>
+    <p>Preparamos cada pedido de forma cuidadosa para que puedas recibirlo en las mejores condiciones posibles, ya sea mediante entrega en mano o a través de envío por Correos.</p>
+    <p><strong>Coste de envío</strong></p>
+    <ul>
+      <li>Los pedidos enviados por Correos tienen un coste de 4,99 €.</li>
+      <li>Los pedidos superiores a 60 € disfrutan de envío gratuito.</li>
+      <li>Las entregas en mano no tienen ningún coste adicional.</li>
+    </ul>
+    <p><strong>Forma de entrega</strong></p>
+    <ul>
+      <li>Ofrecemos la posibilidad de recoger el pedido mediante entrega en mano, acordando previamente el lugar y la hora.</li>
+      <li>Para los pedidos enviados, utilizamos Correos como servicio de mensajería.</li>
+      <li>Todos los productos se preparan y empaquetan cuidadosamente antes de ser entregados o enviados, con el objetivo de que lleguen en perfectas condiciones.</li>
+    </ul>
+    <p><strong>Plazos de entrega</strong></p>
+    <ul>
+      <li>En los pedidos enviados por Correos, el plazo estimado de entrega es de 24 a 72 horas desde que el pedido ha sido preparado y enviado, siempre que el producto esté disponible en stock.</li>
+      <li>En el caso de productos personalizados, el plazo máximo de preparación será de 15 días hábiles antes de proceder a su entrega o envío.</li>
+      <li>Las entregas en mano se realizarán en el día y lugar acordados previamente con el cliente.</li>
+    </ul>
+  `,
+  aviso: `
+    <h4>Aviso legal</h4>
+    <p>De acuerdo con lo establecido en el artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y de Comercio Electrónico (LSSICE), se facilita la siguiente información sobre la persona responsable de este sitio web:</p>
+    <p>Titular: María José Arcón Gauses<br>Nombre comercial: MAG<br>Correo electrónico: <a href="mailto:${window.MAG_CONFIG.EMAIL}">${window.MAG_CONFIG.EMAIL}</a></p>
+    <p><strong>1. Objeto</strong></p>
+    <p>Este Aviso Legal establece las condiciones de acceso, navegación y uso de este sitio web (en adelante, "el Sitio Web"), así como las normas relacionadas con el uso de los contenidos, productos y servicios que se encuentran disponibles en él.</p>
+    <p>El acceso y la navegación por el Sitio Web implican la aceptación de las condiciones recogidas en este Aviso Legal.</p>
+    <p><strong>2. Uso del sitio web</strong></p>
+    <p>El usuario se compromete a utilizar el Sitio Web de manera responsable y respetando en todo momento la legislación vigente, así como las presentes condiciones de uso.</p>
+    <p>No está permitido utilizar el Sitio Web para realizar actividades ilegales, perjudiciales o que puedan afectar a su correcto funcionamiento, ni para causar daños a MAG o a terceras personas.</p>
+    <p>El usuario será responsable de cualquier daño o perjuicio que pueda ocasionar como consecuencia de un uso incorrecto o contrario a estas condiciones.</p>
+    <p><strong>3. Propiedad intelectual e industrial</strong></p>
+    <p>Los contenidos que forman parte del Sitio Web, incluyendo textos, fotografías, diseños, logotipos, imágenes, iconos, nombres comerciales y demás elementos, pertenecen a MAG o se utilizan con la correspondiente autorización de sus titulares.</p>
+    <p>No se permite copiar, modificar, distribuir, reproducir o utilizar estos contenidos con fines comerciales o de cualquier otra naturaleza sin contar previamente con la autorización correspondiente.</p>
+    <p><strong>4. Responsabilidad</strong></p>
+    <p>MAG trabaja para mantener el Sitio Web disponible y funcionando correctamente. Sin embargo, no se garantiza que el acceso al mismo sea permanente o que no puedan producirse errores, interrupciones o problemas técnicos.</p>
+    <p>MAG tampoco se hace responsable de los posibles daños que puedan producirse como consecuencia de un uso inadecuado del Sitio Web o de sus contenidos.</p>
+    <p><strong>5. Legislación aplicable</strong></p>
+    <p>Este Aviso Legal se regirá por la legislación española vigente.</p>
+    <p>En caso de que surgiera cualquier conflicto relacionado con el uso del Sitio Web, se acudirá a los juzgados y tribunales de Valencia.</p>
+  `,
+  contacto: `
+    <h4>Información de contacto</h4>
+    <p>Puedes escribirnos por cualquiera de estos medios y te responderemos lo antes posible:</p>
+    <p>Email: <a href="mailto:${window.MAG_CONFIG.EMAIL}">${window.MAG_CONFIG.EMAIL}</a><br>WhatsApp: <a href="https://wa.me/${window.MAG_CONFIG.WHATSAPP_NUMBER}" target="_blank" rel="noreferrer">enviar mensaje</a><br>Instagram: <a href="https://instagram.com/${window.MAG_CONFIG.INSTAGRAM_USER}" target="_blank" rel="noreferrer">@${window.MAG_CONFIG.INSTAGRAM_USER}</a></p>
+  `,
+};
+const LEGAL_LABELS = {
+  devoluciones: "Política cambios y devoluciones",
+  envios: "Política de envíos",
+  aviso: "Aviso legal",
+  contacto: "Información de contacto",
+};
+const LEGAL_ORDER = ["devoluciones", "envios", "aviso", "contacto"];
+
+function renderLegalTabs(active) {
+  const tabsEl = document.getElementById("legal-tabs");
+  tabsEl.innerHTML = LEGAL_ORDER.map((key) => `<button class="legal-tab ${key === active ? "active" : ""}" data-key="${key}">${LEGAL_LABELS[key]}</button>`).join("");
+  tabsEl.querySelectorAll(".legal-tab").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      history.replaceState(null, "", "#" + btn.dataset.key);
+      showLegalTab(btn.dataset.key);
+    });
+  });
+}
+function showLegalTab(key) {
+  document.getElementById("legal-content").innerHTML = LEGAL_TEXTS[key] || LEGAL_TEXTS.devoluciones;
+  renderLegalTabs(key);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const initial = LEGAL_ORDER.includes(location.hash.replace("#", "")) ? location.hash.replace("#", "") : "devoluciones";
+  showLegalTab(initial);
+  document.getElementById("legal-footer-contact").innerHTML = `
+    <div style="margin-bottom:6px;"><a href="https://wa.me/${window.MAG_CONFIG.WHATSAPP_NUMBER}" target="_blank" rel="noreferrer">WhatsApp</a></div>
+    <div style="margin-bottom:6px;"><a href="https://instagram.com/${window.MAG_CONFIG.INSTAGRAM_USER}" target="_blank" rel="noreferrer">@${window.MAG_CONFIG.INSTAGRAM_USER}</a></div>
+    <div style="margin-bottom:6px;"><a href="mailto:${window.MAG_CONFIG.EMAIL}">${window.MAG_CONFIG.EMAIL}</a></div>
+  `;
+});
+</script>
+</body>
+</html>
