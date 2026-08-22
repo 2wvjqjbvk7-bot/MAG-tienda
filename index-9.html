@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MAG — hecho a mano</title>
+<link rel="stylesheet" href="mag-common.css" />
+</head>
+<body>
+<div id="top"></div>
+<div id="mag-chrome"></div>
+<div id="root"></div>
+
+<script src="mag-common.js"></script>
+<script>
+/* ====================================================================
+   CONFIGURACIÓN de esta página — edita estos valores directamente
+   con el Bloc de notas / TextEdit. No hace falta saber programar,
+   solo cambiar lo que hay entre comillas.
+   ==================================================================== */
+const ABOUT_1 = "MAG nace de una máquina de coser que lleva años sin parar de sonar en casa. Cada bolso, neceser o funda se corta, se cose y se remata a mano, eligiendo telas distintas para que ninguna pieza sea exactamente igual a otra.";
+const ABOUT_2 = "Sin grandes tiradas ni producción en serie: cada encargo se hace cuando se pide, con el tiempo que necesita.";
+const CLOSING_MESSAGE = "¡Cada vez la comunidad de los hilos crece más, y no nos puede gustar más!";
+
+/* Los productos se leen del archivo products.json que está junto a este
+   archivo. Para añadir, cambiar o borrar una pieza, se edita ese archivo
+   directamente desde la web de GitHub — no hace falta tocar este archivo. */
+const DEMO_PRODUCTS = [
+  { nombre: "Tote de lino crudo", categoria: "Bolsos", precio: "32", descripcion: "Bolso amplio de lino, forrado y con asas reforzadas a mano.", imagen: "", disponible: "SI" },
+];
+
+/* ====================================================================
+   HTML de esta página (todo lo que va DEBAJO de la cabecera fija)
+   ==================================================================== */
+document.getElementById("root").innerHTML = `
+  <section class="hero">
+    <div class="wrap inner">
+      <div>
+        <span class="eyebrow">MAG — taller de costura hecho a mano</span>
+        <h2>Lo que antes se guardaba en un armario, ahora tiene sitio en el tuyo.</h2>
+        <p class="lead">Textiles para acompañarte todos los días. Piezas creadas una a una, escogiendo telas, combinaciones y detalles con mucho cariño.</p>
+        <a class="btn btn-clay" href="#catalogo">Ver piezas ↓</a>
+      </div>
+      <img class="spool-art" src="Imagen.jpeg" alt="Costurera cosiendo a máquina" style="border-radius:4px;" />
+    </div>
+  </section>
+
+  <section class="catalog-section" id="catalogo">
+    <div class="wrap">
+      <div class="catalog-head"><h2 style="font-size:26px;">Piezas disponibles</h2></div>
+      <p class="cat-tiles-lead">Elige una categoría para ver todas las piezas.</p>
+      <div class="cat-tiles" id="cat-tiles"></div>
+    </div>
+  </section>
+
+  <section class="about" id="sobre">
+    <div class="wrap inner">
+      <div>
+        <h2>Sobre MAG</h2>
+        <p>${ABOUT_1}</p>
+        <p>${ABOUT_2}</p>
+      </div>
+      <svg class="stitch" viewBox="0 0 400 8" preserveAspectRatio="none"><line x1="0" y1="4" x2="400" y2="4" stroke="#5B5148" stroke-width="2" stroke-dasharray="10 8" stroke-linecap="round"/></svg>
+    </div>
+  </section>
+
+  <section class="hablamos" id="contacto">
+    <div class="wrap inner">
+      <div>
+        <h2>¿Hablamos?</h2>
+        <p class="lead">Piezas hechas a mano, una a una. Si tienes dudas sobre un artículo, quieres un encargo especial o simplemente saber más, escríbenos.</p>
+        <p class="invite">¡Escríbenos para recibir más información!</p>
+        <div class="hablamos-contact">
+          <a href="mailto:${window.MAG_CONFIG.EMAIL}">${window.MAG_CONFIG.EMAIL}</a>
+          <a href="https://wa.me/${window.MAG_CONFIG.WHATSAPP_NUMBER}" target="_blank" rel="noreferrer">WhatsApp +34 636 95 25 95</a>
+          <a href="https://instagram.com/${window.MAG_CONFIG.INSTAGRAM_USER}" target="_blank" rel="noreferrer">@${window.MAG_CONFIG.INSTAGRAM_USER}</a>
+        </div>
+      </div>
+      <form class="hablamos-form" id="hablamos-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-nombre">Nombre *</label>
+            <input type="text" id="f-nombre" placeholder="Ingresa tu nombre" required />
+          </div>
+          <div class="form-group">
+            <label for="f-email">Email *</label>
+            <input type="email" id="f-email" placeholder="Ingresa tu email" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-asunto">Asunto</label>
+            <input type="text" id="f-asunto" placeholder="Escribe el asunto" />
+          </div>
+          <div class="form-group">
+            <label for="f-telefono">Teléfono</label>
+            <input type="tel" id="f-telefono" placeholder="Introduce tu número de teléfono" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="f-mensaje">Mensaje</label>
+          <textarea id="f-mensaje" placeholder="Escribe tu mensaje aquí..."></textarea>
+        </div>
+        <button type="submit" class="btn" style="width:100%; justify-content:center;">Enviar</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="legal-links-section">
+    <div class="wrap">
+      <p class="legal-heading">Enlaces</p>
+      <div class="legal-links">
+        <a href="legal.html#devoluciones">Política cambios y devoluciones</a>
+        <a href="legal.html#envios">Política de envíos</a>
+        <a href="legal.html#aviso">Aviso legal</a>
+        <a href="legal.html#contacto">Información de contacto</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="closing-msg">
+    <p>${CLOSING_MESSAGE}</p>
+  </section>
+
+  <footer>
+    <div class="wrap inner">
+      <div>
+        <h4>MAG</h4>
+        <p style="opacity:0.85; font-size:14px; max-width:260px;">Piezas hechas a mano, a tu ritmo y con la tela que más te guste.</p>
+      </div>
+      <div>
+        <h4>Piezas</h4>
+        <div id="footer-cats"></div>
+      </div>
+      <div>
+        <h4>Contacto</h4>
+        <div style="margin-bottom:6px;"><a href="https://wa.me/${window.MAG_CONFIG.WHATSAPP_NUMBER}?text=${encodeURIComponent("Hola! Tengo una consulta sobre MAG")}" target="_blank" rel="noreferrer">WhatsApp</a></div>
+        <div style="margin-bottom:6px;"><a href="https://instagram.com/${window.MAG_CONFIG.INSTAGRAM_USER}" target="_blank" rel="noreferrer">@${window.MAG_CONFIG.INSTAGRAM_USER}</a></div>
+        <div style="margin-bottom:6px;"><a href="mailto:${window.MAG_CONFIG.EMAIL}">${window.MAG_CONFIG.EMAIL}</a></div>
+      </div>
+    </div>
+    <div class="wrap foot-bottom">hecho a mano · hecho con cariño</div>
+  </footer>
+`;
+
+/* ====================================================================
+   Catálogo: categorías + búsqueda (?buscar=...) + tarjetas con favoritos
+   ==================================================================== */
+function render(products) {
+  const categories = [...new Set(products.map((p) => p.categoria).filter(Boolean))];
+  const tilesEl = document.getElementById("cat-tiles");
+  const footerCats = document.getElementById("footer-cats");
+
+  tilesEl.innerHTML = categories.map((c, i) => {
+    const count = products.filter((p) => p.categoria === c).length;
+    return `
+      <a class="cat-tile" href="catalogo.html?cat=${encodeURIComponent(c)}" style="background:${SWATCHES[i % SWATCHES.length]}">
+        <span class="cat-tile-name">${c}</span>
+        <span class="cat-tile-count">${count} ${count === 1 ? "pieza" : "piezas"}</span>
+      </a>`;
+  }).join("") + `
+      <a class="cat-tile cat-tile-all" href="catalogo.html">
+        <span class="cat-tile-name">Todos los productos</span>
+        <span class="cat-tile-count">Ver catálogo completo →</span>
+      </a>`;
+
+  footerCats.innerHTML = categories.slice(0, 4).map((c) => `<div style="margin-bottom:6px;"><a href="catalogo.html?cat=${encodeURIComponent(c)}">${c}</a></div>`).join("");
+}
+
+async function init() {
+  try {
+    const res = await fetch("./products.json");
+    const products = await res.json();
+    render(Array.isArray(products) && products.length ? products : DEMO_PRODUCTS);
+  } catch (e) {
+    console.error("No se pudo cargar products.json:", e);
+    render(DEMO_PRODUCTS);
+  }
+}
+
+const hablamosForm = document.getElementById("hablamos-form");
+if (hablamosForm) {
+  hablamosForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const nombre = document.getElementById("f-nombre").value.trim();
+    const email = document.getElementById("f-email").value.trim();
+    const asunto = document.getElementById("f-asunto").value.trim();
+    const telefono = document.getElementById("f-telefono").value.trim();
+    const mensaje = document.getElementById("f-mensaje").value.trim();
+
+    if (!nombre || !email) {
+      alert("Por favor, rellena al menos tu nombre y tu email.");
+      return;
+    }
+
+    let text = `Hola! Soy ${nombre}.\n`;
+    if (asunto) text += `Asunto: ${asunto}\n`;
+    text += `Email: ${email}\n`;
+    if (telefono) text += `Teléfono: ${telefono}\n`;
+    if (mensaje) text += `\n${mensaje}`;
+
+    window.open(waLink(text), "_blank", "noreferrer");
+    hablamosForm.reset();
+  });
+}
+
+init();
+</script>
+</body>
+</html>
