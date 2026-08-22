@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Favoritos — MAG</title>
+<link rel="stylesheet" href="mag-common.css" />
+</head>
+<body>
+<div id="mag-chrome"></div>
+
+<section class="page-hero">
+  <div class="wrap">
+    <span class="eyebrow">Tus piezas guardadas</span>
+    <h2>Favoritos</h2>
+    <p class="lead">Aquí encuentras todas las piezas a las que has dado al corazón ♡. Pulsa de nuevo el corazón para quitarlas de esta lista.</p>
+    <div class="fav-subbar" id="fav-subbar" style="display:none;">
+      <span class="fav-count-label" id="fav-count-label"></span>
+      <button class="cart-clear-btn" id="fav-clear-btn">Vaciar favoritos</button>
+    </div>
+  </div>
+</section>
+
+<section class="catalog-section">
+  <div class="wrap">
+    <div class="grid" id="fav-grid"></div>
+    <p class="empty-msg" id="fav-empty" style="display:none;">Todavía no tienes piezas favoritas. Pulsa el corazón ♡ de cualquier pieza del catálogo para guardarla aquí.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap inner">
+    <div>
+      <h4>MAG</h4>
+      <p style="opacity:0.85; font-size:14px; max-width:260px;">Piezas hechas a mano, a tu ritmo y con la tela que más te guste.</p>
+    </div>
+    <div>
+      <h4>Piezas</h4>
+      <div style="margin-bottom:6px;"><a href="index.html#catalogo">Ver catálogo</a></div>
+    </div>
+    <div>
+      <h4>Contacto</h4>
+      <div id="fav-footer-contact"></div>
+    </div>
+  </div>
+  <div class="wrap foot-bottom">hecho a mano · hecho con cariño</div>
+</footer>
+
+<script src="mag-common.js"></script>
+<script>
+async function renderFavGrid() {
+  const grid = document.getElementById("fav-grid");
+  const emptyMsg = document.getElementById("fav-empty");
+  const subbar = document.getElementById("fav-subbar");
+  const countLabel = document.getElementById("fav-count-label");
+  const allProducts = await loadAllProducts();
+  const favNames = getFavorites();
+  const favProducts = allProducts.filter((p) => favNames.includes(p.nombre));
+
+  emptyMsg.style.display = favProducts.length === 0 ? "block" : "none";
+  subbar.style.display = favProducts.length === 0 ? "none" : "flex";
+  countLabel.textContent = favProducts.length === 1 ? "1 pieza guardada" : `${favProducts.length} piezas guardadas`;
+  grid.innerHTML = favProducts.map((p, i) => productCardHTML(p, i)).join("");
+  bindProductCardEvents(grid, favProducts);
+}
+
+window.onFavoritesChanged = renderFavGrid;
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderFavGrid();
+  document.getElementById("fav-clear-btn").addEventListener("click", clearFavorites);
+  document.getElementById("fav-footer-contact").innerHTML = `
+    <div style="margin-bottom:6px;"><a href="https://wa.me/${window.MAG_CONFIG.WHATSAPP_NUMBER}" target="_blank" rel="noreferrer">WhatsApp</a></div>
+    <div style="margin-bottom:6px;"><a href="https://instagram.com/${window.MAG_CONFIG.INSTAGRAM_USER}" target="_blank" rel="noreferrer">@${window.MAG_CONFIG.INSTAGRAM_USER}</a></div>
+    <div style="margin-bottom:6px;"><a href="mailto:${window.MAG_CONFIG.EMAIL}">${window.MAG_CONFIG.EMAIL}</a></div>
+  `;
+});
+</script>
+</body>
+</html>
