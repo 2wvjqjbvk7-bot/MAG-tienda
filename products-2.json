@@ -1,0 +1,103 @@
+[
+  {
+    "nombre": "Tote playero",
+    "categoria": "Bolsos",
+    "precio": "35",
+    "descripcion": "Bolso amplio ideal para ir a la playa, forrado y con asas reforzadas a mano.",
+    "imagen": "",
+    "disponible": "SI"
+  },
+  {
+    "nombre": "Neceser de rayas",
+    "categoria": "Neceseres",
+    "precio": "14",
+    "descripcion": "Neceser de algodón con cremallera, ideal para el día a día.",
+    "imagen": "",
+    "disponible": "SI"
+  },
+  {
+    "nombre": "Neceser de viaje rosa",
+    "categoria": "Neceseres",
+    "precio": "14",
+    "descripcion": "Neceser de viaje en tela rosa, con cremallera blanca, asa lateral y etiqueta de piel. Cosido a mano.",
+    "imagen": "images/neceser-rosa.jpg",
+    "imagenes": [
+      "images/neceser-rosa-1.jpg",
+      "images/neceser-rosa-2.jpg",
+      "images/neceser-rosa-3.jpg",
+      "images/neceser-rosa-4.jpg"
+    ],
+    "disponible": "SI"
+  },
+  {
+    "nombre": "Funda de gafas en pana",
+    "categoria": "Fundas de gafas",
+    "precio": "9",
+    "descripcion": "Funda acolchada de pana, cierre de botón cosido a mano.",
+    "imagen": "",
+    "disponible": "SI"
+  },
+  {
+    "nombre": "Funda de gafas paisley",
+    "categoria": "Fundas de gafas",
+    "precio": "9",
+    "descripcion": "Funda de gafas acolchada en tela estampada paisley, con cremallera en diagonal y etiqueta de piel. Cosida a mano.",
+    "imagen": "images/funda-gafas-paisley.jpg",
+    "imagenes": [
+      "images/funda-gafas-paisley-1.jpg",
+      "images/funda-gafas-paisley-2.jpg",
+      "images/funda-gafas-paisley-3.jpg",
+      "images/funda-gafas-paisley-4.jpg",
+      "images/funda-gafas-paisley-5.jpg"
+    ],
+    "disponible": "SI"
+  },
+  {
+    "nombre": "Funda iPad acolchada",
+    "categoria": "Ordenador & iPad",
+    "precio": "18",
+    "descripcion": "Funda acolchada con cierre de velcro, a medida bajo pedido.",
+    "imagen": "",
+    "disponible": "SI"
+  },
+  {
+    "nombre": "Manta de muselina",
+    "categoria": "Bebé",
+    "precio": "22",
+    "descripcion": "Manta suave de muselina de algodón, cosida a mano.",
+    "imagen": "",
+    "disponible": "SI"
+  },
+  {
+    "nombre": "Nido para bebé",
+    "categoria": "Bebé",
+    "precio": "38",
+    "descripcion": "Nido acolchado y transpirable para los primeros meses, cosido a mano con relleno suave y tela hipoalergénica.",
+    "imagen": "",
+    "disponible": "SI"
+  },
+  {
+    "nombre": "Capa de baño",
+    "categoria": "Bebé",
+    "precio": "18",
+    "descripcion": "Capa de baño con capucha, en algodón absorbente, perfecta para envolver al bebé recién salido de la bañera.",
+    "imagen": "",
+    "disponible": "SI"
+  },
+  {
+    "nombre": "Arrullo de muselina",
+    "categoria": "Bebé",
+    "precio": "20",
+    "descripcion": "Arrullo de muselina suave, ligero y transpirable, ideal para envolver al bebé o usar de manta ligera.",
+    "imagen": "",
+    "disponible": "SI"
+  },
+  {
+    "nombre": "Cambiador portátil",
+    "categoria": "Bebé",
+    "precio": "20",
+    "descripcion": "Cambiador portátil acolchado, fácil de enrollar y llevar, con tela lavable a máquina.",
+    "imagen": "",
+    "disponible": "SI"
+  }
+]
